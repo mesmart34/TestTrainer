@@ -1,0 +1,10 @@
+C:\Users\artem\Documents\TestTrainer\bin\Debug\TestTrainer.exe.config
+C:\Users\artem\Documents\TestTrainer\bin\Debug\TestTrainer.exe
+C:\Users\artem\Documents\TestTrainer\bin\Debug\TestTrainer.pdb
+C:\Users\artem\Documents\TestTrainer\obj\Debug\TestTrainer.csproj.AssemblyReference.cache
+C:\Users\artem\Documents\TestTrainer\obj\Debug\TestTrainer.csproj.SuggestedBindingRedirects.cache
+C:\Users\artem\Documents\TestTrainer\obj\Debug\TestTrainer.Properties.Resources.resources
+C:\Users\artem\Documents\TestTrainer\obj\Debug\TestTrainer.csproj.GenerateResource.cache
+C:\Users\artem\Documents\TestTrainer\obj\Debug\TestTrainer.csproj.CoreCompileInputs.cache
+C:\Users\artem\Documents\TestTrainer\obj\Debug\TestTrainer.exe
+C:\Users\artem\Documents\TestTrainer\obj\Debug\TestTrainer.pdb
