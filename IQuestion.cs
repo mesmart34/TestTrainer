@@ -8,7 +8,7 @@ namespace TestTrainer
 {
     public enum QuestionType
     {
-        None, Order
+        None, Order, Choise, Write, Mulitple
     }
 
     public interface IQuestion

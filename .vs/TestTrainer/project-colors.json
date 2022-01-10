@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "639e931a-a875-4b16-b497-41d6e8a098ab": {
+      "ProjectGuid": "639e931a-a875-4b16-b497-41d6e8a098ab",
+      "DisplayName": "TestTrainer",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

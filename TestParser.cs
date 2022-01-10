@@ -15,12 +15,13 @@ namespace TestTrainer
         }
 
         private List<IQuestion> questions;
+        private int questionToGenerate;
 
-        public TestParser(string pathToDataBase)
+        public TestParser(string pathToDataBase, int n)
         {
+            questionToGenerate = n;
             questions = new List<IQuestion>();
             var lines = LoadFileAsLines(pathToDataBase).Where(x => x.Length > 0).ToList();
-            //var questionType = QuestionType.None;
             IQuestion question = null;
             for (var lineIndex = 0; lineIndex < lines.Count; lineIndex++)
             {
@@ -46,6 +47,24 @@ namespace TestTrainer
                                 order.AddOption(line);
                             }
                             break;
+                        case QuestionType.Choise:
+                            {
+                                var choise = (Choise)question;
+                                choise.AddOption(line);
+                            }
+                            break;
+                        case QuestionType.Mulitple:
+                            {
+                                var mult = (QuestionMultiple)question;
+                                mult.AddOption(line);
+                            }
+                            break;
+                        case QuestionType.Write:
+                            {
+                                var choise = (WriteAnswer)question;
+                                //choise.AddOption(line);
+                            }
+                            break;
                     }
                 }
             }
@@ -64,6 +83,18 @@ namespace TestTrainer
                     {
                         return new QuestionOrder(text);
                     };
+                case QuestionType.Choise:
+                    {
+                        return new Choise(text);
+                    }
+                case QuestionType.Write:
+                    {
+                        return new WriteAnswer(text);
+                    };
+                case QuestionType.Mulitple:
+                    {
+                        return new QuestionMultiple(text);
+                    };
             }
             return null;
         }
@@ -72,7 +103,12 @@ namespace TestTrainer
         {
             if (line.Contains("(У)"))
                 return QuestionType.Order;
-
+            if (line.Contains("(ВО1)"))
+                return QuestionType.Choise;
+            if (line.Contains("(О)"))
+                return QuestionType.Write;
+            if (line.Contains("(ВОМ)"))
+                return QuestionType.Mulitple;
             return QuestionType.None;
         }
 
@@ -81,9 +117,12 @@ namespace TestTrainer
             return File.ReadAllLines(path);
         }
 
-        public IEnumerable<IQuestion> GetQuestions()
+        public IEnumerator<IQuestion> GetQuestions()
         {
-            foreach (var question in questions)
+            var rnd = new Random();
+            if (questionToGenerate > questions.Count)
+                questionToGenerate = questions.Count;
+            foreach (var question in questions.OrderBy(item => rnd.Next())/*.Take(questionToGenerate)*/)
                 yield return question;
         }
     }

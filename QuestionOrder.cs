@@ -9,13 +9,15 @@ namespace TestTrainer
     internal class QuestionOrder : IQuestion
     {
         private string text;
-        private List<string> options;
+        public List<string> options { get; private set; }
 
         public QuestionOrder(string text)
         {
             this.text = text;
             options = new List<string>();
+           
         }
+
 
         public void AddOption(string option)
         {
@@ -24,6 +26,7 @@ namespace TestTrainer
 
         public string GetText()
         {
+            this.text = this.text.Remove(0, this.text.IndexOf('['));
             return text;
         }
 
