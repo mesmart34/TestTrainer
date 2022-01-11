@@ -44,7 +44,7 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(16, 18);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(753, 132);
+            this.panel1.Size = new System.Drawing.Size(753, 236);
             this.panel1.TabIndex = 0;
             // 
             // label1
@@ -52,15 +52,16 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(254)));
             this.label1.Location = new System.Drawing.Point(12, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(720, 105);
+            this.label1.Size = new System.Drawing.Size(720, 209);
             this.label1.TabIndex = 0;
             this.label1.Text = "<NonText>";
             // 
             // txtAnwser
             // 
-            this.txtAnwser.Location = new System.Drawing.Point(16, 162);
+            this.txtAnwser.Location = new System.Drawing.Point(16, 265);
             this.txtAnwser.Name = "txtAnwser";
             this.txtAnwser.Size = new System.Drawing.Size(190, 20);
             this.txtAnwser.TabIndex = 1;
@@ -68,35 +69,35 @@
             // answerPanel
             // 
             this.answerPanel.AutoScroll = true;
-            this.answerPanel.Location = new System.Drawing.Point(19, 192);
+            this.answerPanel.Location = new System.Drawing.Point(16, 291);
             this.answerPanel.Name = "answerPanel";
-            this.answerPanel.Size = new System.Drawing.Size(749, 182);
+            this.answerPanel.Size = new System.Drawing.Size(749, 147);
             this.answerPanel.TabIndex = 2;
             // 
             // btnSelect
             // 
-            this.btnSelect.Location = new System.Drawing.Point(294, 380);
+            this.btnSelect.Location = new System.Drawing.Point(294, 444);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(203, 29);
             this.btnSelect.TabIndex = 3;
             this.btnSelect.Text = "Ответить";
             this.btnSelect.UseVisualStyleBackColor = true;
-            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
+            this.btnSelect.Click += new System.EventHandler(this.AnswerButton);
             // 
             // btnWrite
             // 
-            this.btnWrite.Location = new System.Drawing.Point(230, 157);
+            this.btnWrite.Location = new System.Drawing.Point(212, 260);
             this.btnWrite.Name = "btnWrite";
-            this.btnWrite.Size = new System.Drawing.Size(195, 29);
+            this.btnWrite.Size = new System.Drawing.Size(195, 28);
             this.btnWrite.TabIndex = 4;
             this.btnWrite.Text = "Ответить";
             this.btnWrite.UseVisualStyleBackColor = true;
-            this.btnWrite.Click += new System.EventHandler(this.btnWrite_Click);
+            this.btnWrite.Click += new System.EventHandler(this.AnswerButton);
             // 
             // btnNext
             // 
             this.btnNext.Enabled = false;
-            this.btnNext.Location = new System.Drawing.Point(628, 410);
+            this.btnNext.Location = new System.Drawing.Point(628, 471);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(140, 31);
             this.btnNext.TabIndex = 5;
@@ -108,7 +109,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(782, 450);
+            this.ClientSize = new System.Drawing.Size(782, 514);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnWrite);
             this.Controls.Add(this.btnSelect);

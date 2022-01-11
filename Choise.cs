@@ -9,19 +9,18 @@ namespace TestTrainer
     internal class Choise : IQuestion
     {
         private string text;
-        private List<string> options;
-        public string RightAnswer { get; private set; }
+        public List<string> Options { get; private set; }
+        private string _rightAnswer;
 
         public Choise(string text)
         {
-            options = new List<string>();
+            Options = new List<string>();
             this.text = text;
         }
 
         public string GetText()
         {
-            this.text = this.text.Remove(0, this.text.IndexOf('['));
-            return text;
+            return text.Remove(0, text.IndexOf('['));
         }
 
         public string Normalize(string option)
@@ -36,13 +35,13 @@ namespace TestTrainer
         public void AddOption(string option)
         {
             if (option.Contains("&"))
-                RightAnswer = Normalize(option);
-            options.Add(Normalize(option));
+                _rightAnswer = Normalize(option);
+            Options.Add(Normalize(option));
         }
 
         public bool IsRight(string answer)
         {
-            return RightAnswer == answer;
+            return _rightAnswer == answer;
         }
 
         QuestionType IQuestion.GetType()

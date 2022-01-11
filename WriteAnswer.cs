@@ -30,7 +30,7 @@ namespace TestTrainer
                 return true;
             }
 
-            var splited = text.Split(' ');
+            /*var splited = text.Split(' ');
             var found = true;
             foreach (var item in splited)
             {
@@ -51,7 +51,7 @@ namespace TestTrainer
                     this.text = this.text.Replace(RightAnswer, "_______");
                     break;
                 }
-            }
+            }*/
             return false;
         }
 
@@ -62,8 +62,7 @@ namespace TestTrainer
 
         public string GetText()
         {
-            this.text = this.text.Remove(0, this.text.IndexOf('['));
-            return text;
+            return text.Remove(0, text.IndexOf('['));
         }
 
         QuestionType IQuestion.GetType()

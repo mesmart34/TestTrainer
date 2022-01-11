@@ -28,6 +28,8 @@ namespace TestTrainer
                 var line = lines[lineIndex];
                 if (string.IsNullOrEmpty(line))
                     continue;
+                if (line.StartsWith("V"))
+                    continue;
                 if (GetLineType(line) == LineType.Question)
                 {
                     var questionType = GetQuestionType(line);
@@ -62,6 +64,7 @@ namespace TestTrainer
                         case QuestionType.Write:
                             {
                                 var choise = (WriteAnswer)question;
+
                                 //choise.AddOption(line);
                             }
                             break;
@@ -122,7 +125,7 @@ namespace TestTrainer
             var rnd = new Random();
             if (questionToGenerate > questions.Count)
                 questionToGenerate = questions.Count;
-            foreach (var question in questions.OrderBy(item => rnd.Next())/*.Take(questionToGenerate)*/)
+            foreach (var question in questions.OrderBy(item => rnd.Next()).Take(questionToGenerate))
                 yield return question;
         }
     }

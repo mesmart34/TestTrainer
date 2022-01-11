@@ -19,3 +19,14 @@ C:\Users\artem\Desktop\TestTrainer\obj\Debug\TestTrainer.csproj.CoreCompileInput
 C:\Users\artem\Desktop\TestTrainer\obj\Debug\TestTrainer.exe
 C:\Users\artem\Desktop\TestTrainer\obj\Debug\TestTrainer.pdb
 C:\Users\artem\Desktop\TestTrainer\obj\Debug\TestTrainer.Form1.resources
+C:\Users\artem\Documents\GitHub\TestTrainer\bin\Debug\TestTrainer.exe.config
+C:\Users\artem\Documents\GitHub\TestTrainer\bin\Debug\TestTrainer.exe
+C:\Users\artem\Documents\GitHub\TestTrainer\bin\Debug\TestTrainer.pdb
+C:\Users\artem\Documents\GitHub\TestTrainer\obj\Debug\TestTrainer.csproj.AssemblyReference.cache
+C:\Users\artem\Documents\GitHub\TestTrainer\obj\Debug\TestTrainer.csproj.SuggestedBindingRedirects.cache
+C:\Users\artem\Documents\GitHub\TestTrainer\obj\Debug\TestTrainer.Form1.resources
+C:\Users\artem\Documents\GitHub\TestTrainer\obj\Debug\TestTrainer.Properties.Resources.resources
+C:\Users\artem\Documents\GitHub\TestTrainer\obj\Debug\TestTrainer.csproj.GenerateResource.cache
+C:\Users\artem\Documents\GitHub\TestTrainer\obj\Debug\TestTrainer.csproj.CoreCompileInputs.cache
+C:\Users\artem\Documents\GitHub\TestTrainer\obj\Debug\TestTrainer.exe
+C:\Users\artem\Documents\GitHub\TestTrainer\obj\Debug\TestTrainer.pdb
