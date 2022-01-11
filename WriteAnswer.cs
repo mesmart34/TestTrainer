@@ -10,6 +10,7 @@ namespace TestTrainer
     {
         private string text;
         public string RightAnswer { get; private set; }
+        private bool tried = false;
 
 
         public WriteAnswer(string text)
@@ -57,6 +58,7 @@ namespace TestTrainer
 
         public bool IsRight(string answer)
         {
+            tried = true;
             return RightAnswer.ToLower().Replace(" ", "") == answer.ToLower().Replace(" ", "");
         }
 
@@ -69,5 +71,7 @@ namespace TestTrainer
         {
             return QuestionType.Write;
         }
+
+        public bool IsTried() => tried;
     }
 }

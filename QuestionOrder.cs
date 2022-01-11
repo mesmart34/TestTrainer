@@ -10,22 +10,22 @@ namespace TestTrainer
     {
         private string text;
         public List<string> RightAnswers { get; private set; }
-        public List<string> Options { get; private set; }
+        public List<string> Shuffled { get; private set; }
         private Random rnd;
+        private bool tried = false;
 
         public QuestionOrder(string text)
         {
             rnd = new Random();
             this.text = text;
             RightAnswers = new List<string>();
-            Options = new List<string>();
-           
+            Shuffled = new List<string>();
         }
 
         public string GetRightAnswer()
         {
             var right = "";
-            foreach (var item in Options)
+            foreach (var item in Shuffled)
             {
                 var index = RightAnswers.IndexOf(item);
                 if (index == -1)
@@ -37,6 +37,7 @@ namespace TestTrainer
 
         public bool IsRight(string answers)
         {
+            tried = true;
             return answers == GetRightAnswer();
         }
 
@@ -44,8 +45,8 @@ namespace TestTrainer
         public void AddOption(string option)
         {
             RightAnswers.Add(option);
-            Options.Add(option);
-            Options = Options.OrderBy(x => rnd.Next()).ToList();
+            Shuffled.Add(option);
+            Shuffled = Shuffled.OrderBy(x => rnd.Next()).ToList();
         }
 
         public string GetText()
@@ -57,5 +58,7 @@ namespace TestTrainer
         {
             return QuestionType.Order;
         }
+
+        public bool IsTried() => tried;
     }
 }

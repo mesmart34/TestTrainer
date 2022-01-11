@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,14 +16,22 @@ namespace TestTrainer
         IEnumerator<IQuestion> questions;
         List<CheckBox> checkBoxes;
         List<RadioButton> radioButtons;
-        int n = 60;
+        int n = 0;
+        int rights = 0;
+
 
         public Form1()
         {
             InitializeComponent();
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            string input = Interaction.InputBox("Кол-во вопросов?", "Тренер Рома просит кол-во вопросов", "60");
+            if (string.IsNullOrEmpty(input))
+                Environment.Exit(1);
+            n = int.Parse(input);
             checkBoxes = new List<CheckBox>();
             radioButtons = new List<RadioButton>();
             var parser = new TestParser("DataBase.txt", n);
+            n = parser.GetQuestionsNumber();
             questions = parser.GetQuestions();
             questions.MoveNext();
             ShowQuestion(questions.Current);
@@ -30,6 +39,7 @@ namespace TestTrainer
 
         private void Draw(IQuestion question)
         {
+            pictureBox1.Image = null;
             switch (question.GetType())
             {
                 case QuestionType.Mulitple:
@@ -72,13 +82,51 @@ namespace TestTrainer
                     {
                         var order = (QuestionOrder)question;
                         int counter = 0;
-                        foreach (var item in order.Options)
+                        foreach (var item in order.Shuffled)
                         {
                             var index = item.IndexOf(')');
-                            if(index == -1)
+                            if (index == -1)
                                 continue;
                             counter++;
                             label1.Text += '\n' + counter.ToString() + ". " + item.Remove(0, index + 1).Trim(' ');
+                        }
+                    }
+                    break;
+                case QuestionType.Correlate:
+                    {
+                        var correlate = (Correlate)question;
+                        var sb = new StringBuilder();
+                        foreach (var item in correlate.Left)
+                        {
+                            sb.AppendLine(item);
+                        }
+                        leftLabel.Text = sb.ToString();
+                        sb.Clear();
+                        int counter = 0;
+                        foreach (var item in correlate.RightShuffled)
+                        {
+                            sb.AppendLine((char)('А' + counter++) + item.Substring(1, item.Length - 1));
+                        }
+                        rightLabel.Text = sb.ToString();
+                    }
+                    break;
+                case QuestionType.Picture:
+                    {
+                        var pic = (PictureQuestion)question;
+                        label1.Text = pic.GetText();
+                        radioButtons.Clear();
+                        answerPanel.Controls.Clear();
+                        pictureBox1.Image = pic.Image;
+                        for (int i = 0; i < pic.Options.Count; i++)
+                        {
+                            var radio = new RadioButton();
+                            radio.Text = pic.Options[i];
+                            var size = radio.Bounds.Size;
+                            size.Width = 1000;
+                            radio.AutoSize = true;
+                            radio.Bounds = new Rectangle(new Point(10, i * size.Height + 5), size);
+                            radioButtons.Add(radio);
+                            answerPanel.Controls.Add(radioButtons[i]);
                         }
                     }
                     break;
@@ -92,24 +140,42 @@ namespace TestTrainer
             if (question is WriteAnswer)
             {
                 ShowWriteAnswer(true);
+                ShowCorrelateLabels(false);
                 ShowSelectAnswer(false);
             }
             else if (question is QuestionMultiple)
             {
                 ShowWriteAnswer(false);
+                ShowCorrelateLabels(false);
                 ShowSelectAnswer(true);
             }
-            else if (question is Choise)
+            else if (question is Choise || question is PictureQuestion)
             {
                 ShowWriteAnswer(false);
+                ShowCorrelateLabels(false);
                 ShowSelectAnswer(true);
             }
             else if (question is QuestionOrder)
             {
                 ShowWriteAnswer(true);
+                ShowCorrelateLabels(false);
                 ShowSelectAnswer(false);
             }
+            else if (question is Correlate)
+            {
+                ShowWriteAnswer(true);
+                ShowSelectAnswer(false);
+                ShowCorrelateLabels(true);
+            }
             Draw(question);
+        }
+
+        private void ShowCorrelateLabels(bool value)
+        {
+            leftPanel.Visible = value;
+            leftPanel.Enabled = value;
+            rightPanel.Visible = value;
+            rightPanel.Enabled = value;
         }
 
         private void ShowWriteAnswer(bool value)
@@ -140,18 +206,31 @@ namespace TestTrainer
             }
             else
             {
-                label1.Text = "Всё епта";
-                btnNext.Enabled = false;
-                ShowWriteAnswer(false);
-                ShowSelectAnswer(false);
+                End();
             }
+        }
+
+        private void End()
+        {
+            label1.Text = "Всё епта";
+            btnNext.Enabled = false;
+            ShowWriteAnswer(false);
+            ShowSelectAnswer(false);
+            var sb = new StringBuilder();
+            int success = (int)((rights / (double)n) * 100.0);
+            sb.Append("Тренировка с Ромой выполнена на: " + success.ToString() + "%");
+            if (success >= 60)
+                sb.Append("\nРома вами доволен!");
+            else
+                sb.Append("\nВас ждет неприятный разговор с Ромой!");
+            Interaction.MsgBox(sb.ToString(), MsgBoxStyle.OkOnly, "Статистика");
         }
 
 
         private void ProcessMultiple()
         {
             bool flag = false;
-
+            var multiple = ((QuestionMultiple)questions.Current);
             foreach (var check in checkBoxes)
                 check.BackColor = Color.Transparent;
             var answers = new List<string>();
@@ -164,10 +243,13 @@ namespace TestTrainer
                 }
             }
 
-            if (((QuestionMultiple)questions.Current).IsRight(answers))
+            if (!multiple.IsTried())
             {
-                flag = true;
-                
+                if (multiple.IsRight(answers))
+                {
+                    flag = true;
+                    rights++;
+                }
             }
 
             foreach (var check in checkBoxes)
@@ -186,32 +268,45 @@ namespace TestTrainer
         {
             var answers = txtAnwser.Text;
             var write = ((WriteAnswer)questions.Current);
-            if (write.IsRight(answers))
+            if (!write.IsTried())
             {
-                txtAnwser.ForeColor = Color.Green;
-            }
-            else
-            {
-                txtAnwser.Text = write.RightAnswer;
-                txtAnwser.ForeColor = Color.Red;
+                if (write.IsRight(answers))
+                {
+                    txtAnwser.BackColor = Color.Green;
+                    rights++;
+                }
+                else
+                {
+                    txtAnwser.Text = write.RightAnswer;
+                    txtAnwser.BackColor = Color.Red;
+                }
             }
         }
 
         private void ProcessChoise()
         {
-            foreach(var radio in radioButtons)
+            var choise = ((Choise)questions.Current);
+            if (!choise.IsTried())
             {
-                radio.BackColor = Color.Transparent;
-                if(radio.Checked)
+                foreach (var radio in radioButtons)
                 {
-                    radio.BackColor = Color.Red;
-                    if (((Choise)questions.Current).IsRight(radio.Text))
-                        radio.BackColor = Color.Green;
-                }
-                else
-                {
-                    if (((Choise)questions.Current).IsRight(radio.Text))
-                        radio.BackColor = Color.Yellow;
+                    radio.BackColor = Color.Transparent;
+                    if (radio.Checked)
+                    {
+                        radio.BackColor = Color.Red;
+                        {
+                            if (choise.IsRight(radio.Text))
+                            {
+                                radio.BackColor = Color.Green;
+                                rights++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (((Choise)questions.Current).IsRight(radio.Text))
+                            radio.BackColor = Color.Yellow;
+                    }
                 }
             }
         }
@@ -219,12 +314,64 @@ namespace TestTrainer
         private void ProcessOrder()
         {
             var order = ((QuestionOrder)questions.Current);
-            if (order.IsRight(txtAnwser.Text))
-                txtAnwser.BackColor = Color.Green;
-            else
+            if (!order.IsTried())
             {
-                txtAnwser.BackColor = Color.Red;
-                txtAnwser.Text = order.GetRightAnswer();
+                if (order.IsRight(txtAnwser.Text))
+                {
+                    txtAnwser.BackColor = Color.Green;
+                    rights++;
+                }
+                else
+                {
+                    txtAnwser.BackColor = Color.Red;
+                    txtAnwser.Text = order.GetRightAnswer();
+                }
+            }
+        }
+
+        private void ProcessCorrelate()
+        {
+            var correlate = ((Correlate)questions.Current);
+            if (!correlate.IsTried())
+            {
+                if (correlate.IsRight(txtAnwser.Text))
+                {
+                    txtAnwser.BackColor = Color.Green;
+                    rights++;
+                }
+                else
+                {
+                    txtAnwser.BackColor = Color.Red;
+                    txtAnwser.Text = correlate.GetRightAnswer();
+                }
+            }
+        }
+
+        private void ProcessPicture()
+        {
+            var choise = ((PictureQuestion)questions.Current);
+            if (!choise.IsTried())
+            {
+                foreach (var radio in radioButtons)
+                {
+                    radio.BackColor = Color.Transparent;
+                    if (radio.Checked)
+                    {
+                        radio.BackColor = Color.Red;
+                        {
+                            if (choise.IsRight(radio.Text))
+                            {
+                                radio.BackColor = Color.Green;
+                                rights++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (((PictureQuestion)questions.Current).IsRight(radio.Text))
+                            radio.BackColor = Color.Yellow;
+                    }
+                }
             }
         }
 
@@ -241,9 +388,22 @@ namespace TestTrainer
             else if (questions.Current.GetType() == QuestionType.Choise)
             {
                 ProcessChoise();
-            }else if (questions.Current.GetType() == QuestionType.Order)
+            }
+            else if (questions.Current.GetType() == QuestionType.Order)
             {
                 ProcessOrder();
+            }
+            else if (questions.Current.GetType() == QuestionType.Correlate)
+            {
+                ProcessCorrelate();
+            }
+            else if (questions.Current.GetType() == QuestionType.Correlate)
+            {
+                ProcessCorrelate();
+            }
+            else if (questions.Current.GetType() == QuestionType.Picture)
+            {
+                ProcessPicture();
             }
             btnNext.Enabled = true;
         }

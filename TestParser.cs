@@ -68,9 +68,30 @@ namespace TestTrainer
                                 //choise.AddOption(line);
                             }
                             break;
+                        case QuestionType.Correlate:
+                            {
+                                var correlate = (Correlate)question;
+                                correlate.AddOption(line);
+
+                            }
+                            break;
+                        case QuestionType.Picture:
+                            {
+                                var correlate = (PictureQuestion)question;
+                                correlate.AddOption(line);
+
+                            }
+                            break;
                     }
                 }
             }
+        }
+
+        public int GetQuestionsNumber()
+        {
+            if (questionToGenerate > questions.Count)
+                questionToGenerate = questions.Count;
+            return questionToGenerate;
         }
 
         private LineType GetLineType(string text)
@@ -98,6 +119,14 @@ namespace TestTrainer
                     {
                         return new QuestionMultiple(text);
                     };
+                case QuestionType.Correlate:
+                    {
+                        return new Correlate(text);
+                    };
+                case QuestionType.Picture:
+                    {
+                        return new PictureQuestion(text);
+                    };
             }
             return null;
         }
@@ -112,6 +141,10 @@ namespace TestTrainer
                 return QuestionType.Write;
             if (line.Contains("(ВОМ)"))
                 return QuestionType.Mulitple;
+            if (line.Contains("(С)"))
+                return QuestionType.Correlate;
+            if (line.Contains("(ВО1К)"))
+                return QuestionType.Picture;
             return QuestionType.None;
         }
 
@@ -123,9 +156,7 @@ namespace TestTrainer
         public IEnumerator<IQuestion> GetQuestions()
         {
             var rnd = new Random();
-            if (questionToGenerate > questions.Count)
-                questionToGenerate = questions.Count;
-            foreach (var question in questions.OrderBy(item => rnd.Next()).Take(questionToGenerate))
+            foreach (var question in questions.OrderBy(item => rnd.Next()).Take(GetQuestionsNumber()))
                 yield return question;
         }
     }

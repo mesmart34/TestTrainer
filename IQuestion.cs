@@ -8,7 +8,7 @@ namespace TestTrainer
 {
     public enum QuestionType
     {
-        None, Order, Choise, Write, Mulitple
+        None, Order, Choise, Write, Mulitple, Correlate, Picture
     }
 
     public interface IQuestion
@@ -16,5 +16,7 @@ namespace TestTrainer
         //void AddAnswer(IAnswer answer);
         string GetText();
         QuestionType GetType();
+
+        bool IsTried();
     }
 }

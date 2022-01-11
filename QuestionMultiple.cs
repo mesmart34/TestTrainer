@@ -11,6 +11,7 @@ namespace TestTrainer
         private string text;
         public List<string> Options { get; private set; }
         public List<string> RightAnswers { get; private set; }
+        private bool tried = false;
 
         public QuestionMultiple(string text)
         {
@@ -43,6 +44,7 @@ namespace TestTrainer
 
         public bool IsRight(List<string> answers)
         {
+            tried = true;
             if (answers.Count != RightAnswers.Count)
                 return false;
             foreach(var item in answers)
@@ -57,5 +59,7 @@ namespace TestTrainer
         {
             return QuestionType.Mulitple;
         }
+
+        public bool IsTried() => tried;
     }
 }

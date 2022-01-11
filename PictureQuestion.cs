@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TestTrainer
 {
-    internal class Choise : IQuestion
+    internal class PictureQuestion : IQuestion
     {
         private string text;
         public List<string> Options { get; private set; }
         private string _rightAnswer;
         private bool tried = false;
+        public Image Image { get; private set; }
 
 
-        public Choise(string text)
+        public PictureQuestion(string text)
         {
             Options = new List<string>();
             this.text = text;
+            try
+            {
+                Image = Image.FromFile("src/" + text + ".png");
+            } catch (Exception ex)
+            {
+            }
         }
 
         public string GetText()
@@ -49,7 +57,7 @@ namespace TestTrainer
 
         QuestionType IQuestion.GetType()
         {
-            return QuestionType.Choise;
+            return QuestionType.Picture;
         }
 
         public bool IsTried() => tried;
